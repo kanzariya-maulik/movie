@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Search, Bell, User, Menu, X, LogOut } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Search, Bell, User, Menu, X, LogOut, Languages, Check } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -19,6 +19,9 @@ export default function Navbar() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showLanguages, setShowLanguages] = useState(false);
+  const [currentLang, setCurrentLang] = useState('English');
+  const langRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -48,14 +51,34 @@ export default function Navbar() {
       }
     };
 
+    const handleClickOutside = (event: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(event.target as Node)) {
+        setShowLanguages(false);
+      }
+    };
+
     window.addEventListener('scroll', handleScroll);
+    document.addEventListener('mousedown', handleClickOutside);
     checkAuth();
     fetchNotifications();
+    
+    // Check initial language from cookie if possible
+    const checkLang = () => {
+      const cookies = document.cookie.split('; ');
+      const transCookie = cookies.find(row => row.startsWith('googtrans='));
+      if (transCookie) {
+        if (transCookie.includes('/en/gu')) setCurrentLang('ગુજરાતી');
+        else if (transCookie.includes('/en/hi')) setCurrentLang('हिंदी');
+        else setCurrentLang('English');
+      }
+    };
+    checkLang();
     
     const interval = setInterval(fetchNotifications, 60000);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('mousedown', handleClickOutside);
       clearInterval(interval);
     };
   }, [pathname]);
@@ -180,6 +203,45 @@ export default function Navbar() {
             </button>
           )}
 
+          {/* Premium Language Switcher */}
+          <div className="relative" ref={langRef}>
+            <button
+              onClick={() => setShowLanguages(!showLanguages)}
+              className="flex items-center space-x-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs font-medium text-gray-300 transition hover:bg-white/10 hover:text-white md:px-3 md:py-1.5 md:text-sm"
+              aria-label="Change language"
+            >
+              <Languages className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="hidden sm:inline">{currentLang}</span>
+            </button>
+
+            {showLanguages && (
+              <div className="absolute right-0 mt-3 w-40 origin-top-right overflow-hidden rounded-md bg-netflix-dark-grey shadow-2xl ring-1 ring-white/10">
+                <div className="py-1">
+                  {[
+                    { label: 'English', code: 'en' },
+                    { label: 'ગુજરાતી', code: 'gu' },
+                    { label: 'हिंदी', code: 'hi' }
+                  ].map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => handleLanguageChange(lang.code, lang.label)}
+                      className={cn(
+                        "flex w-full items-center justify-between px-4 py-2.5 text-left text-sm transition hover:bg-white/5",
+                        currentLang === lang.label ? "text-netflix-red" : "text-gray-300"
+                      )}
+                    >
+                      <span>{lang.label}</span>
+                      {currentLang === lang.label && <Check className="h-4 w-4" />}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Hidden Original Widget for Logic */}
+          <div id="google_translate_element" className="hidden" />
+
           <button 
             className="md:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -235,5 +297,38 @@ export default function Navbar() {
     } catch (error) {
       console.error('Error marking notifications as read:', error);
     }
+  }
+
+  function handleLanguageChange(code: string, label: string) {
+    if (code === 'en') {
+      // Clear all possible googtrans cookies for a fresh English state
+      const domains = [
+        window.location.hostname,
+        '.' + window.location.hostname,
+        'botad-movie.vercel.app',
+        '.botad-movie.vercel.app'
+      ];
+      
+      domains.forEach(domain => {
+        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${domain}`;
+        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      });
+      
+      // Force reload to completely reset the translation engine
+      window.location.reload();
+      return;
+    }
+    
+    const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+    if (select) {
+      select.value = code;
+      select.dispatchEvent(new Event('change'));
+      setCurrentLang(label);
+    } else {
+      // Fallback: set cookie and reload
+      document.cookie = `googtrans=/en/${code}; path=/;`;
+      window.location.reload();
+    }
+    setShowLanguages(false);
   }
 }

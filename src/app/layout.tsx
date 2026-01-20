@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     description: 'The best place to download latest movies in HD quality.',
     images: [
       {
-        url: '/og-image.jpg', // Make sure this exists or is a placeholder
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Botad Movies',
@@ -64,6 +64,33 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(generateWebSiteSchema()) }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              function googleTranslateElementInit() {
+                new google.translate.TranslateElement({
+                  pageLanguage: 'en',
+                  includedLanguages: 'en,gu,hi',
+                  autoDisplay: false
+                }, 'google_translate_element');
+
+                // Inject CSS to override Google Translate UI shifts immediately
+                const css = \`
+                  body { top: 0 !important; position: static !important; }
+                  .skiptranslate, .goog-te-banner-frame, .goog-te-banner, .goog-te-menu-frame, #goog-gt-tt { 
+                    display: none !important; 
+                    visibility: hidden !important; 
+                  }
+                  .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
+                \`;
+                const style = document.createElement('style');
+                style.appendChild(document.createTextNode(css));
+                document.head.appendChild(style);
+              }
+            `,
+          }}
+        />
+        <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async />
         <Navbar />
         <main className="min-h-screen">
           {children}
