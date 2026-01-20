@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import MovieCard from '@/components/MovieCard';
 import { Play, Info } from 'lucide-react';
@@ -16,7 +16,7 @@ interface Movie {
   backdropUrl?: string;
 }
 
-export default function Home() {
+function HomeContent() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
@@ -123,5 +123,17 @@ export default function Home() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-screen items-center justify-center bg-netflix-black text-white">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-netflix-red border-t-transparent"></div>
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
   );
 }

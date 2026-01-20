@@ -5,9 +5,25 @@ import { useRouter } from 'next/navigation';
 import { Plus, Trash2, Edit2, MessageSquare, LogOut, Film } from 'lucide-react';
 import Link from 'next/link';
 
+interface Movie {
+  _id: string;
+  title: string;
+  posterUrl: string;
+  imdbRating: number;
+  slug: string;
+}
+
+interface Recommendation {
+  _id: string;
+  movieName: string;
+  email?: string;
+  status: 'pending' | 'added';
+  createdAt: string;
+}
+
 export default function AdminDashboard() {
-  const [movies, setMovies] = useState([]);
-  const [recommendations, setRecommendations] = useState([]);
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [activeTab, setActiveTab] = useState<'movies' | 'recommendations'>('movies');
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -46,7 +62,7 @@ export default function AdminDashboard() {
     try {
       const res = await fetch(`/api/movies/admin/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        setMovies(movies.filter((m: any) => m._id !== id));
+        setMovies(movies.filter((m: Movie) => m._id !== id));
       }
     } catch (error) {
       alert('Delete failed');
@@ -65,7 +81,7 @@ export default function AdminDashboard() {
       });
 
       if (res.ok) {
-        setRecommendations(recommendations.map((r: any) => 
+        setRecommendations(recommendations.map((r: Recommendation) => 
           r._id === id ? { ...r, status: 'added' } : r
         ));
         alert('Marked as added and email notification sent!');
@@ -158,7 +174,7 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800">
-                {movies.map((movie: any) => (
+                {movies.map((movie: Movie) => (
                   <tr key={movie._id} className="transition hover:bg-black/20">
                     <td className="px-6 py-4">
                       <div className="h-16 w-12 overflow-hidden rounded bg-gray-800">
@@ -202,7 +218,7 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800">
-                {recommendations.map((rec: any) => (
+                {recommendations.map((rec: Recommendation) => (
                   <tr key={rec._id} className="transition hover:bg-black/20">
                     <td className="px-6 py-4 font-medium">{rec.movieName}</td>
                     <td className="px-6 py-4 text-gray-400">{rec.email || 'N/A'}</td>
