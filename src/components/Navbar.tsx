@@ -122,6 +122,7 @@ export default function Navbar() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-24 bg-transparent py-1 pl-7 text-white outline-none transition-all duration-300 focus:w-32 md:w-0 md:focus:w-60 lg:w-40 border-b border-transparent focus:border-white text-xs md:text-sm"
+              aria-label="Search movies"
             />
             <Search className="absolute left-0 h-4 w-4 cursor-pointer md:h-5 md:w-5" onClick={(e) => (e.currentTarget.previousSibling as HTMLInputElement).focus()} />
           </form>
@@ -133,6 +134,7 @@ export default function Navbar() {
                 if (!showNotifications && unreadCount > 0) markAsRead();
               }}
               className="relative pt-1"
+              aria-label="View notifications"
             >
               <Bell className="h-5 w-5 cursor-pointer md:h-6 md:w-6" />
               {unreadCount > 0 && (

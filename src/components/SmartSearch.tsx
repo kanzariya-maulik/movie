@@ -96,6 +96,7 @@ export default function SmartSearch() {
             setShowResults(true);
           }}
           className="w-full rounded-full bg-black/40 border border-white/20 px-4 py-2 pl-10 text-white placeholder-gray-400 focus:border-netflix-red focus:outline-none focus:ring-1 focus:ring-netflix-red backdrop-blur-md transition-all"
+          aria-label="Search for a movie"
         />
         <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
         

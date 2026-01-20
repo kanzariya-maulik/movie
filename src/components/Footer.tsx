@@ -5,10 +5,10 @@ export default function Footer() {
     <footer className="bg-netflix-black px-4 py-10 text-gray-500 lg:px-12">
       <div className="mx-auto max-w-6xl">
         <div className="flex space-x-6 mb-8 text-white">
-          <Facebook className="h-6 w-6 cursor-pointer hover:text-gray-400" />
-          <Instagram className="h-6 w-6 cursor-pointer hover:text-gray-400" />
-          <Twitter className="h-6 w-6 cursor-pointer hover:text-gray-400" />
-          <Youtube className="h-6 w-6 cursor-pointer hover:text-gray-400" />
+          <Facebook className="h-6 w-6 cursor-pointer hover:text-gray-400" aria-label="Facebook" />
+          <Instagram className="h-6 w-6 cursor-pointer hover:text-gray-400" aria-label="Instagram" />
+          <Twitter className="h-6 w-6 cursor-pointer hover:text-gray-400" aria-label="Twitter" />
+          <Youtube className="h-6 w-6 cursor-pointer hover:text-gray-400" aria-label="Youtube" />
         </div>
         
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4 mb-8 text-sm">
