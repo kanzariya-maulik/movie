@@ -17,6 +17,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const baseUrl = 'https://botad-movie.vercel.app';
 
+    // Fetch genres and years for sitemap
+    const genres = await Movie.distinct('genres');
+    const years = await Movie.distinct('releaseYear');
+
+    const genreEntries: MetadataRoute.Sitemap = genres.map((genre: string) => ({
+      url: `${baseUrl}/genre/${genre.toLowerCase().replace(/\s+/g, '-')}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.7,
+    }));
+
+    const yearEntries: MetadataRoute.Sitemap = years.map((year: number) => ({
+      url: `${baseUrl}/year/${year}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    }));
+
     const movieEntries: MetadataRoute.Sitemap = movies.map((movie: any) => ({
       url: `${baseUrl}/movie/${movie.slug}`,
       lastModified: movie.updatedAt ? new Date(movie.updatedAt) : new Date(),
@@ -31,6 +49,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: 'daily',
         priority: 1.0,
       },
+      ...genreEntries,
+      ...yearEntries,
       ...movieEntries,
     ];
   } catch (error) {

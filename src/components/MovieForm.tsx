@@ -21,6 +21,11 @@ export default function MovieForm({ id }: MovieFormProps) {
     screenshots: [''],
     downloadButtons: [{ text: '', link: '' }],
     genres: '',
+    languages: 'English',
+    size: '',
+    resolution: '',
+    audio: '',
+    series: '',
   });
 
   useEffect(() => {
@@ -42,6 +47,11 @@ export default function MovieForm({ id }: MovieFormProps) {
             screenshots: movie.screenshots.length > 0 ? movie.screenshots : [''],
             downloadButtons: movie.downloadButtons.length > 0 ? movie.downloadButtons : [{ text: '', link: '' }],
             genres: movie.genres ? movie.genres.join(', ') : '',
+            languages: movie.languages ? movie.languages.join(', ') : 'English',
+            size: movie.size || '',
+            resolution: movie.resolution || '',
+            audio: movie.audio || '',
+            series: movie.series || '',
           });
         }
       };
@@ -104,7 +114,8 @@ export default function MovieForm({ id }: MovieFormProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          genres: formData.genres.split(',').map(g => g.trim()).filter(Boolean)
+          genres: formData.genres.split(',').map(g => g.trim()).filter(Boolean),
+          languages: formData.languages.split(',').map(l => l.trim()).filter(Boolean)
         }),
       });
 
@@ -207,6 +218,63 @@ export default function MovieForm({ id }: MovieFormProps) {
               className="w-full rounded bg-netflix-light-grey px-4 py-3 outline-none ring-1 ring-white/10 focus:ring-netflix-red"
               placeholder="e.g. Action, Drama, Sci-Fi"
             />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm text-gray-400">Languages (Comma separated)</label>
+            <input
+              name="languages"
+              value={formData.languages}
+              onChange={handleChange}
+              className="w-full rounded bg-netflix-light-grey px-4 py-3 outline-none ring-1 ring-white/10 focus:ring-netflix-red"
+              placeholder="e.g. Hindi, English"
+            />
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-sm text-gray-400">File Size</label>
+              <input
+                name="size"
+                value={formData.size}
+                onChange={handleChange}
+                className="w-full rounded bg-netflix-light-grey px-4 py-3 outline-none ring-1 ring-white/10 focus:ring-netflix-red"
+                placeholder="e.g. 1.2 GB"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm text-gray-400">Resolution</label>
+              <input
+                name="resolution"
+                value={formData.resolution}
+                onChange={handleChange}
+                className="w-full rounded bg-netflix-light-grey px-4 py-3 outline-none ring-1 ring-white/10 focus:ring-netflix-red"
+                placeholder="e.g. 1080p, 720p"
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-sm text-gray-400">Audio Format</label>
+              <input
+                name="audio"
+                value={formData.audio}
+                onChange={handleChange}
+                className="w-full rounded bg-netflix-light-grey px-4 py-3 outline-none ring-1 ring-white/10 focus:ring-netflix-red"
+                placeholder="e.g. Dual Audio (Hindi/English)"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm text-gray-400">Series Name (for Clustering)</label>
+              <input
+                name="series"
+                value={formData.series}
+                onChange={handleChange}
+                className="w-full rounded bg-netflix-light-grey px-4 py-3 outline-none ring-1 ring-white/10 focus:ring-netflix-red"
+                placeholder="e.g. Avengers"
+              />
+            </div>
           </div>
 
           {/* Screenshots Section */}

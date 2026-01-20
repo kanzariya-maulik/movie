@@ -1,4 +1,5 @@
 import { Facebook, Instagram, Twitter, Youtube } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
@@ -13,24 +14,30 @@ export default function Footer() {
         
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4 mb-8 text-sm">
           <div className="space-y-3">
-            <p className="hover:underline cursor-pointer">Audio Description</p>
-            <p className="hover:underline cursor-pointer">Investor Relations</p>
-            <p className="hover:underline cursor-pointer">Legal Notices</p>
+            <h4 className="font-bold text-gray-300">Browse</h4>
+            <Link href="/" className="block hover:underline">Home</Link>
+            <Link href="/movies/page/2" className="block hover:underline">Latest Movies</Link>
+            <Link href="/favorites" className="block hover:underline">My Favorites</Link>
           </div>
           <div className="space-y-3">
+            <h4 className="font-bold text-gray-300">Genres</h4>
+            <Link href="/genre/action" className="block hover:underline">Action</Link>
+            <Link href="/genre/comedy" className="block hover:underline">Comedy</Link>
+            <Link href="/genre/drama" className="block hover:underline">Drama</Link>
+            <Link href="/genre/horror" className="block hover:underline">Horror</Link>
+          </div>
+          <div className="space-y-3">
+            <h4 className="font-bold text-gray-300">Release Years</h4>
+            <Link href="/year/2025" className="block hover:underline">2025 Movies</Link>
+            <Link href="/year/2024" className="block hover:underline">2024 Movies</Link>
+            <Link href="/year/2023" className="block hover:underline">2023 Movies</Link>
+          </div>
+          <div className="space-y-3">
+            <h4 className="font-bold text-gray-300">Support</h4>
             <p className="hover:underline cursor-pointer">Help Center</p>
-            <p className="hover:underline cursor-pointer">Jobs</p>
-            <p className="hover:underline cursor-pointer">Cookie Preferences</p>
-          </div>
-          <div className="space-y-3">
-            <p className="hover:underline cursor-pointer">Gift Cards</p>
             <p className="hover:underline cursor-pointer">Terms of Use</p>
-            <p className="hover:underline cursor-pointer">Corporate Information</p>
-          </div>
-          <div className="space-y-3">
-            <p className="hover:underline cursor-pointer">Media Center</p>
-            <p className="hover:underline cursor-pointer">Privacy</p>
-            <p className="hover:underline cursor-pointer">Contact Us</p>
+            <p className="hover:underline cursor-pointer">Privacy Policy</p>
+            <Link href="/admin/login" className="block hover:underline text-gray-700">Admin Login</Link>
           </div>
         </div>
 

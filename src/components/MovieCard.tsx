@@ -34,7 +34,7 @@ export default function MovieCard({ movie, isAdmin, onDelete }: MovieCardProps) 
           <div className="relative aspect-[2/3] w-full">
             <Image
               src={movie.posterUrl}
-              alt={movie.title}
+              alt={`${movie.title} Movie Poster Download`}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"

@@ -1,0 +1,140 @@
+[
+  {
+    "title": "Avatar: The Way of Water",
+    "slug": "avatar-the-way-of-water-2022",
+    "posterUrl": "https://image.tmdb.org/t/p/original/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg",
+    "imdbRating": 7.6,
+    "description": "Jake Sully lives with his newfound family formed on the extrasolar moon Pandora. Once a familiar threat returns to finish what was previously started, Jake must work with Neytiri and the army of the Na'vi race to protect their home.",
+    "screenshots": [
+      "https://image.tmdb.org/t/p/original/8Y7669Yp98SjLRTp9Q97S94S9Yp.jpg",
+      "https://image.tmdb.org/t/p/original/s16H6tpK2oGURZqc92Vcy6ZpEu.jpg",
+      "https://image.tmdb.org/t/p/original/vI9vU7e5eSjYmSTP4YJk6W8l7U6.jpg"
+    ],
+    "downloadButtons": [
+      {
+        "text": "Download 1080p [2.4GB]",
+        "link": "https://example.com/download/avatar2-1080p"
+      },
+      {
+        "text": "Download 720p [1.1GB]",
+        "link": "https://example.com/download/avatar2-720p"
+      }
+    ],
+    "genres": ["Action", "Adventure", "Sci-Fi"],
+    "releaseYear": 2022,
+    "quality": "BluRay",
+    "cast": ["Sam Worthington", "Zoe Saldaña", "Sigourney Weaver"],
+    "languages": ["English", "Hindi"],
+    "size": "2.4 GB",
+    "resolution": "1080p",
+    "audio": "Dual Audio (Hindi-English)",
+    "series": "Avatar"
+  },
+  {
+    "title": "The Dark Knight",
+    "slug": "the-dark-knight-2008",
+    "posterUrl": "https://image.tmdb.org/t/p/original/qJ2tW6WMUDp9QQSvByZSQcaIDeo.jpg",
+    "imdbRating": 9.0,
+    "description": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+    "screenshots": [
+      "https://image.tmdb.org/t/p/original/nMKdUUTNjbviSj95T797S8zjobz.jpg",
+      "https://image.tmdb.org/t/p/original/o87Y0L4bOWh8yI2FqB8Yk8S6y2U.jpg"
+    ],
+    "downloadButtons": [
+      {
+        "text": "Download 1080p [1.8GB]",
+        "link": "https://example.com/download/tdk-1080p"
+      }
+    ],
+    "genres": ["Action", "Crime", "Drama"],
+    "releaseYear": 2008,
+    "quality": "HDRip",
+    "cast": ["Christian Bale", "Heath Ledger", "Aaron Eckhart"],
+    "languages": ["English", "Hindi"],
+    "size": "1.8 GB",
+    "resolution": "1080p",
+    "audio": "Dual Audio (Hindi-English)",
+    "series": "The Dark Knight Trilogy"
+  },
+  {
+    "title": "Interstellar",
+    "slug": "interstellar-2014",
+    "posterUrl": "https://image.tmdb.org/t/p/original/gEU2QniE6E77NI6lCU6MxlSaba7.jpg",
+    "imdbRating": 8.7,
+    "description": "The adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.",
+    "screenshots": [
+      "https://image.tmdb.org/t/p/original/xJHbtZ466uK6967mQOis4GPrHlU.jpg",
+      "https://image.tmdb.org/t/p/original/AiEC8YmB5pYvR5h5NmsPj248j85.jpg"
+    ],
+    "downloadButtons": [
+      {
+        "text": "Download 4K Ultra HD [5.5GB]",
+        "link": "https://example.com/download/interstellar-4k"
+      },
+      {
+        "text": "Download 1080p [2.1GB]",
+        "link": "https://example.com/download/interstellar-1080p"
+      }
+    ],
+    "genres": ["Adventure", "Drama", "Sci-Fi"],
+    "releaseYear": 2014,
+    "quality": "4K UHD",
+    "cast": ["Matthew McConaughey", "Anne Hathaway", "Jessica Chastain"],
+    "languages": ["English"],
+    "size": "5.5 GB",
+    "resolution": "2160p",
+    "audio": "English 7.1",
+    "series": "Christopher Nolan Collection"
+  },
+  {
+    "title": "Inception",
+    "slug": "inception-2010",
+    "posterUrl": "https://image.tmdb.org/t/p/original/oYuLcTiwE0SsyS91BYIBun5SIl5.jpg",
+    "imdbRating": 8.8,
+    "description": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
+    "screenshots": [
+      "https://image.tmdb.org/t/p/original/s3TBrjBwsXPvUuXR0ZPkgZ1IP9Z.jpg",
+      "https://image.tmdb.org/t/p/original/uD7Ky9mO7N66H6X2u9U6S6y6S.jpg"
+    ],
+    "downloadButtons": [
+      {
+        "text": "Download 1080p [2.2GB]",
+        "link": "https://example.com/download/inception-1080p"
+      }
+    ],
+    "genres": ["Action", "Adventure", "Sci-Fi"],
+    "releaseYear": 2010,
+    "quality": "BluRay",
+    "cast": ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Elliot Page"],
+    "languages": ["English", "Hindi"],
+    "size": "2.2 GB",
+    "resolution": "1080p",
+    "audio": "Dual Audio (Hindi-English)"
+  },
+  {
+    "title": "Deadpool & Wolverine",
+    "slug": "deadpool-and-wolverine-2024",
+    "posterUrl": "https://image.tmdb.org/t/p/original/8cdclKE5UnEXccp2MDN9gjz1Yny.jpg",
+    "imdbRating": 7.9,
+    "description": "A listless Wade Wilson toils away in civilian life with his days as the morally flexible mercenary, Deadpool, behind him. But when his homeworld faces an existential threat, Wade must reluctantly suit-up again with an even more reluctant Wolverine.",
+    "screenshots": [
+      "https://image.tmdb.org/t/p/original/9l97S6M0S8S6y6y6y6y6y6y6y6y.jpg",
+      "https://image.tmdb.org/t/p/original/7l7S6M0S8S6y6y6y6y6y6y6y6y.jpg"
+    ],
+    "downloadButtons": [
+      {
+        "text": "Download 1080p [2.5GB]",
+        "link": "https://example.com/download/dp3-1080p"
+      }
+    ],
+    "genres": ["Action", "Comedy", "Sci-Fi"],
+    "releaseYear": 2024,
+    "quality": "WEB-DL",
+    "cast": ["Ryan Reynolds", "Hugh Jackman", "Emma Corrin"],
+    "languages": ["English", "Hindi"],
+    "size": "2.5 GB",
+    "resolution": "1080p",
+    "audio": "Dual Audio (Hindi-English)",
+    "series": "Deadpool"
+  }
+]

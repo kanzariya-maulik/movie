@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useRouter, useSearchParams, useParams } from 'next/navigation';
 import MovieCard from '@/components/MovieCard';
 import { Play, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import RecommendationForm from '@/components/RecommendationForm';
@@ -42,7 +42,22 @@ interface HomeContentProps {
 export default function HomeContent({ initialMovies, initialGenres, pagination }: HomeContentProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const params = useParams();
   const [isAdmin, setIsAdmin] = useState(false);
+  
+  // Infinite Scroll State
+  const [movies, setMovies] = useState<Movie[]>(initialMovies);
+  const [page, setPage] = useState(pagination.currentPage);
+  const [hasMore, setHasMore] = useState(pagination.hasMore);
+  const [isFetching, setIsFetching] = useState(false);
+  const observer = useRef<IntersectionObserver | null>(null);
+  
+  // Reset movies when initialMovies changes (due to filter change)
+  useEffect(() => {
+    setMovies(initialMovies);
+    setPage(pagination.currentPage);
+    setHasMore(pagination.hasMore);
+  }, [initialMovies, pagination.currentPage, pagination.hasMore]);
 
   const query = searchParams.get('q');
   const selectedGenre = searchParams.get('genre') || 'All';
@@ -51,7 +66,7 @@ export default function HomeContent({ initialMovies, initialGenres, pagination }
   const selectedSort = searchParams.get('sort') || 'newest';
 
   const currentYear = new Date().getFullYear();
-  const years = Array.from({length: 20}, (_, i) => currentYear - i);
+  const years = Array.from({length: 75}, (_, i) => currentYear - i);
 
   const title = query 
     ? `Search Results for "${query}"` 
@@ -59,7 +74,6 @@ export default function HomeContent({ initialMovies, initialGenres, pagination }
       ? `${selectedGenre} Movies` 
       : "Latest Releases";
 
-  // Check auth
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -83,11 +97,19 @@ export default function HomeContent({ initialMovies, initialGenres, pagination }
     }
     // Reset to page 1 on filter change
     params.delete('page');
-    router.push(`/?${params.toString()}`);
+    
+    const queryString = params.toString() ? `?${params.toString()}` : '';
+    router.push(`${window.location.pathname}${queryString}`);
   }
 
   const handleRatingChange = (rating: string) => updateParams('rating', rating);
-  const handleYearChange = (year: string) => updateParams('year', year);
+  const handleYearChange = (year: string) => {
+    if (year === 'All') {
+      router.push('/');
+    } else {
+      router.push(`/year/${year}`);
+    }
+  };
   const handleSortChange = (sort: string) => updateParams('sort', sort);
   const handleGenreClick = (genre: string) => updateParams('genre', genre);
 
@@ -121,9 +143,77 @@ export default function HomeContent({ initialMovies, initialGenres, pagination }
   // Pagination Helper
   const createPageUrl = (pageNumber: number) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('page', pageNumber.toString());
-    return `/?${params.toString()}`;
+    params.delete('page'); // Remove from query since it's in path
+    
+    const queryString = params.toString() ? `?${params.toString()}` : '';
+    
+    // Check current path to preserve genre/year
+    const pathname = window.location.pathname;
+    
+    if (pathname.startsWith('/genre/')) {
+       return `${pathname}/page/${pageNumber}${queryString}`;
+    }
+    if (pathname.startsWith('/year/')) {
+       return `${pathname}/page/${pageNumber}${queryString}`;
+    }
+    
+    return `/movies/page/${pageNumber}${queryString}`;
   };
+
+  const loadMore = useCallback(async () => {
+    if (isFetching || !hasMore) return;
+    
+    setIsFetching(true);
+    const nextPage = page + 1;
+    
+    try {
+      // Construct API URL with current filters
+      const apiParams = new URLSearchParams();
+      if (query) apiParams.set('q', query);
+      
+      // Get genre from URL params if on genre page, otherwise from searchParams
+      const genre = params.genre ? (params.genre as string).replace(/-/g, ' ') : selectedGenre;
+      if (genre && genre !== 'All') apiParams.set('genre', genre);
+      
+      if (selectedRating !== 'All') apiParams.set('minRating', selectedRating);
+      
+      // Get year from URL params if on year page, otherwise from searchParams
+      const year = params.year ? (params.year as string) : selectedYear;
+      if (year && year !== 'All') apiParams.set('year', year);
+      
+      if (selectedSort !== 'newest') apiParams.set('sort', selectedSort);
+      apiParams.set('page', nextPage.toString());
+      apiParams.set('limit', '18');
+
+      const res = await fetch(`/api/movies?${apiParams.toString()}`);
+      const data = await res.json();
+      
+      if (data.movies && data.movies.length > 0) {
+        setMovies(prev => [...prev, ...data.movies]);
+        setPage(nextPage);
+        setHasMore(data.pagination.hasMore);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('Error fetching more movies:', error);
+    } finally {
+      setIsFetching(false);
+    }
+  }, [page, hasMore, isFetching, query, selectedGenre, selectedRating, selectedYear, selectedSort, params]);
+
+  const lastMovieRef = useCallback((node: HTMLDivElement | null) => {
+    if (isFetching) return;
+    if (observer.current) observer.current.disconnect();
+    
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        loadMore();
+      }
+    });
+    
+    if (node) observer.current.observe(node);
+  }, [isFetching, hasMore, loadMore]);
 
   return (
     <div className="relative pb-20">
@@ -166,18 +256,18 @@ export default function HomeContent({ initialMovies, initialGenres, pagination }
           {/* Genre Selector */}
           <div className="flex space-x-3 overflow-x-auto pb-4 scrollbar-hide md:pb-0 mask-image-linear-edges">
             {initialGenres.map((genre: string) => (
-              <button
+              <Link
                 key={genre}
-                onClick={() => handleGenreClick(genre)}
+                href={genre === 'All' ? '/' : `/genre/${genre.toLowerCase().replace(/\s+/g, '-')}`}
                 className={cn(
                   "whitespace-nowrap rounded-full px-5 py-2 text-xs md:text-sm font-medium transition-all duration-300",
-                  selectedGenre === genre
+                  selectedGenre.toLowerCase() === genre.toLowerCase()
                     ? "bg-netflix-red text-white shadow-lg shadow-netflix-red/20"
                     : "bg-netflix-dark-grey text-gray-400 hover:bg-gray-800 hover:text-white"
                 )}
               >
                 {genre}
-              </button>
+              </Link>
             ))}
           </div>
 
@@ -229,51 +319,28 @@ export default function HomeContent({ initialMovies, initialGenres, pagination }
 
         {/* Movie Grid */}
         <div className="grid grid-cols-2 gap-y-8 gap-x-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 mb-12">
-          {initialMovies.map((movie) => (
-            <MovieCard 
-              key={movie.slug} 
-              movie={movie} 
-              isAdmin={isAdmin}
-              onDelete={handleDeleteMovie}
-            />
+          {movies.map((movie, index) => (
+            <div key={movie._id} ref={index === movies.length - 1 ? lastMovieRef : null}>
+              <MovieCard 
+                movie={movie} 
+                isAdmin={isAdmin}
+                onDelete={handleDeleteMovie}
+              />
+            </div>
           ))}
         </div>
+
+        {/* Loading Spinner for Infinite Scroll */}
+        {isFetching && (
+          <div className="flex justify-center py-10">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-netflix-red border-t-transparent shadow-lg shadow-netflix-red/20"></div>
+          </div>
+        )}
 
         {initialMovies.length === 0 && (
           <div className="py-20 text-center text-gray-500">
             <p className="text-xl">No movies found matching your criteria.</p>
             <button onClick={() => router.push('/')} className="mt-4 text-netflix-red hover:underline">Clear all filters</button>
-          </div>
-        )}
-        
-        {/* Pagination */}
-        {pagination.totalPages > 1 && (
-          <div className="flex justify-center items-center space-x-2 py-8">
-            {pagination.currentPage > 1 ? (
-              <Link 
-                href={createPageUrl(pagination.currentPage - 1)}
-                className="flex items-center justify-center h-10 w-10 rounded-full bg-netflix-dark-grey hover:bg-white/20 transition text-white"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </Link>
-            ) : (
-              <div className="h-10 w-10" />
-            )}
-
-            <span className="text-sm text-gray-400">
-              Page <span className="text-white font-bold">{pagination.currentPage}</span> of {pagination.totalPages}
-            </span>
-
-            {pagination.currentPage < pagination.totalPages ? (
-              <Link
-                href={createPageUrl(pagination.currentPage + 1)}
-                 className="flex items-center justify-center h-10 w-10 rounded-full bg-netflix-dark-grey hover:bg-white/20 transition text-white"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </Link>
-            ) : (
-              <div className="h-10 w-10" />
-            )}
           </div>
         )}
       </section>

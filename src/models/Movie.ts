@@ -15,6 +15,11 @@ export interface IMovie extends Document {
   releaseYear?: number;
   quality?: string;
   cast?: string[];
+  languages?: string[];
+  size?: string;
+  resolution?: string;
+  audio?: string;
+  series?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -37,6 +42,11 @@ const MovieSchema: Schema = new Schema(
     releaseYear: { type: Number },
     quality: { type: String, default: 'HD' },
     cast: [{ type: String }],
+    languages: [{ type: String }],
+    size: { type: String },
+    resolution: { type: String },
+    audio: { type: String },
+    series: { type: String },
   },
   { timestamps: true }
 );

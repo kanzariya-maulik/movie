@@ -96,6 +96,22 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeleteRecommendation = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this recommendation?')) return;
+
+    try {
+      const res = await fetch(`/api/recommendations/admin/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setRecommendations(recommendations.filter((r: Recommendation) => r._id !== id));
+      } else {
+        const data = await res.json();
+        alert(data.message || 'Delete failed');
+      }
+    } catch (error) {
+      alert('Error deleting recommendation');
+    }
+  };
+
   function cn(...inputs: any[]) {
     return inputs.filter(Boolean).join(' ');
   }
@@ -302,14 +318,25 @@ export default function AdminDashboard() {
                         {new Date(rec.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 text-right">
-                        {rec.status === 'pending' && (
-                          <button
-                            onClick={() => handleMarkAsAdded(rec._id, rec.movieName)}
-                            className="rounded bg-green-600 px-3 py-1 text-xs font-bold transition hover:bg-green-700"
-                          >
-                            Mark as Added
-                          </button>
-                        )}
+                        <div className="flex justify-end space-x-2">
+                          {rec.status === 'pending' && (
+                            <button
+                              onClick={() => handleMarkAsAdded(rec._id, rec.movieName)}
+                              className="rounded bg-green-600 px-3 py-1 text-xs font-bold transition hover:bg-green-700"
+                            >
+                              Mark as Added
+                            </button>
+                          )}
+                          {rec.status === 'added' && (
+                            <button
+                              onClick={() => handleDeleteRecommendation(rec._id)}
+                              className="rounded p-2 text-netflix-red transition hover:bg-netflix-red/10 hover:text-red-400"
+                              title="Delete Recommendation"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -341,6 +368,16 @@ export default function AdminDashboard() {
                       className="mt-4 w-full rounded bg-green-600 py-3 text-sm font-bold transition hover:bg-green-700"
                     >
                       Mark as Added
+                    </button>
+                  )}
+
+                  {rec.status === 'added' && (
+                    <button
+                      onClick={() => handleDeleteRecommendation(rec._id)}
+                      className="mt-4 flex w-full items-center justify-center space-x-2 rounded bg-netflix-red/10 py-3 text-sm font-semibold text-netflix-red transition hover:bg-netflix-red/20"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      <span>Delete Request</span>
                     </button>
                   )}
                 </div>
