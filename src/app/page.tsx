@@ -6,8 +6,8 @@ import { Metadata } from 'next';
 export const revalidate = 0; // Dynamic rendering for search/filters
 
 export const metadata: Metadata = {
-  title: 'Botad Movies - Download Movies in HD',
-  description: 'Download latest movies in HD quality. The best collection of movies for free download.',
+  title: 'Latest Movies Download | Botad Movies',
+  description: 'Browse and download the latest movies in HD quality with direct links. Updated daily.',
   alternates: {
     canonical: 'https://botad-movie.vercel.app',
   },

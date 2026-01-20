@@ -48,12 +48,16 @@ export async function generateMetadata({ params }: MovieDetailsProps): Promise<M
     };
   }
 
+  const releaseYear = movie.releaseYear || new Date(movie.createdAt).getFullYear();
+  const title = `${movie.title} (${releaseYear}) Full Movie Download | Botad Movies`;
+  const description = `Download ${movie.title} full movie in HD. Cast, story, trailer, and direct download links.`;
+
   return {
-    title: `${movie.title} - Download Free HD`,
-    description: movie.description.substring(0, 160),
+    title,
+    description,
     openGraph: {
-      title: movie.title,
-      description: movie.description.substring(0, 160),
+      title,
+      description,
       images: [
         {
           url: movie.posterUrl,

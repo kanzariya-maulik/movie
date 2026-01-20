@@ -54,10 +54,6 @@ export async function getMovies({
   let sortStage: any = { createdAt: -1 }; // Default
   
   if (query) {
-    // If searching, simple sort by relevance wasn't strictly implemented before, 
-    // but we can sort by createdAt descending to show newest matches first.
-    // Or we could implement text score if we had text indexes.
-    // For now, let's stick to the user's sort or default.
     sortStage = { createdAt: -1 }; 
   }
 
