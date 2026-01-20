@@ -3,12 +3,53 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { generateWebSiteSchema } from "@/lib/seo";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Cinemax - Download Movies",
-  description: "Download your favorite movies in high quality. Exclusive movie collection.",
+  metadataBase: new URL('https://botad-movie.vercel.app'),
+  title: {
+    default: "Botad Movies - Download Movies in HD",
+    template: "%s | Botad Movies",
+  },
+  description: "Download your favorite movies in high quality. Exclusive movie collection available for free download.",
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://botad-movie.vercel.app',
+    siteName: 'Botad Movies',
+    title: 'Botad Movies - Free HD Movie Downloads',
+    description: 'The best place to download latest movies in HD quality.',
+    images: [
+      {
+        url: '/og-image.jpg', // Make sure this exists or is a placeholder
+        width: 1200,
+        height: 630,
+        alt: 'Botad Movies',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Botad Movies - Free HD Movie Downloads',
+    description: 'Download latest movies in HD. Fast and secure.',
+    creator: '@botadmovies',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'verification_token', // Placeholder
+  },
 };
 
 export default function RootLayout({
@@ -19,6 +60,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(generateWebSiteSchema()) }}
+        />
         <Navbar />
         <main className="min-h-screen">
           {children}

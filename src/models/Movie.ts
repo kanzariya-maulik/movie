@@ -11,6 +11,10 @@ export interface IMovie extends Document {
     text: string;
     link: string;
   }[];
+  genres: string[];
+  releaseYear?: number;
+  quality?: string;
+  cast?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -29,6 +33,10 @@ const MovieSchema: Schema = new Schema(
         link: { type: String, required: true },
       },
     ],
+    genres: [{ type: String }],
+    releaseYear: { type: Number },
+    quality: { type: String, default: 'HD' },
+    cast: [{ type: String }],
   },
   { timestamps: true }
 );

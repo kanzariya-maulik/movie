@@ -20,14 +20,18 @@ export default function MovieForm({ id }: MovieFormProps) {
     description: '',
     screenshots: [''],
     downloadButtons: [{ text: '', link: '' }],
+    genres: '',
   });
 
   useEffect(() => {
     if (id) {
       const fetchMovie = async () => {
-        const res = await fetch(`/api/movies`);
-        const movies = await res.json();
-        const movie = movies.find((m: any) => m._id === id);
+        const res = await fetch(`/api/movies/admin/${id}`);
+        if (!res.ok) {
+           console.error('Failed to fetch movie');
+           return;
+        }
+        const movie = await res.json();
         if (movie) {
           setFormData({
             title: movie.title,
@@ -37,6 +41,7 @@ export default function MovieForm({ id }: MovieFormProps) {
             description: movie.description,
             screenshots: movie.screenshots.length > 0 ? movie.screenshots : [''],
             downloadButtons: movie.downloadButtons.length > 0 ? movie.downloadButtons : [{ text: '', link: '' }],
+            genres: movie.genres ? movie.genres.join(', ') : '',
           });
         }
       };
@@ -97,7 +102,10 @@ export default function MovieForm({ id }: MovieFormProps) {
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          genres: formData.genres.split(',').map(g => g.trim()).filter(Boolean)
+        }),
       });
 
       if (res.ok) {
@@ -115,12 +123,12 @@ export default function MovieForm({ id }: MovieFormProps) {
   return (
     <div className="min-h-screen bg-netflix-black px-4 pt-24 text-white md:px-12 md:pt-32">
       <div className="mx-auto max-w-4xl">
-        <Link href="/admin" className="mb-6 flex items-center space-x-2 text-gray-400 hover:text-white">
-          <ArrowLeft className="h-5 w-5" />
+        <Link href="/admin" className="mb-6 inline-flex items-center space-x-2 text-sm text-gray-400 hover:text-white">
+          <ArrowLeft className="h-4 w-4" />
           <span>Back to Dashboard</span>
         </Link>
 
-        <h1 className="mb-8 text-3xl font-bold">{id ? 'Edit Movie' : 'Add New Movie'}</h1>
+        <h1 className="mb-8 text-2xl font-bold md:text-3xl">{id ? 'Edit Movie' : 'Add New Movie'}</h1>
 
         <form onSubmit={handleSubmit} className="space-y-8 pb-20">
           <div className="grid gap-6 md:grid-cols-2">
@@ -187,6 +195,17 @@ export default function MovieForm({ id }: MovieFormProps) {
               onChange={handleChange}
               className="w-full rounded bg-netflix-light-grey px-4 py-3 outline-none ring-1 ring-white/10 focus:ring-netflix-red"
               placeholder="Movie synopsis..."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm text-gray-400">Genres (Comma separated)</label>
+            <input
+              name="genres"
+              value={formData.genres}
+              onChange={handleChange}
+              className="w-full rounded bg-netflix-light-grey px-4 py-3 outline-none ring-1 ring-white/10 focus:ring-netflix-red"
+              placeholder="e.g. Action, Drama, Sci-Fi"
             />
           </div>
 
@@ -264,11 +283,11 @@ export default function MovieForm({ id }: MovieFormProps) {
             </div>
           </div>
 
-          <div className="flex justify-end pt-6">
+          <div className="flex pt-6">
             <button
               type="submit"
               disabled={loading}
-              className="flex items-center space-x-2 rounded bg-netflix-red px-10 py-4 font-bold transition hover:bg-red-700 disabled:opacity-50"
+              className="flex w-full items-center justify-center space-x-2 rounded bg-netflix-red px-10 py-4 font-bold transition hover:bg-red-700 disabled:opacity-50 md:w-auto"
             >
               <Save className="h-5 w-5" />
               <span>{loading ? 'Saving...' : 'Save Movie'}</span>

@@ -11,7 +11,7 @@ export default function Footer() {
           <Youtube className="h-6 w-6 cursor-pointer hover:text-gray-400" />
         </div>
         
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 mb-8 text-sm">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4 mb-8 text-sm">
           <div className="space-y-3">
             <p className="hover:underline cursor-pointer">Audio Description</p>
             <p className="hover:underline cursor-pointer">Investor Relations</p>
@@ -40,7 +40,7 @@ export default function Footer() {
           </button>
         </div>
 
-        <p className="text-xs">© 1997-2024 Cinemax, Inc.</p>
+        <p className="text-xs">© 1997-2024 Botad Movies, Inc.</p>
       </div>
     </footer>
   );
