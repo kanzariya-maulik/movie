@@ -34,9 +34,10 @@ export default function Footer() {
           </div>
           <div className="space-y-3">
             <h4 className="font-bold text-gray-300">Support</h4>
-            <p className="hover:underline cursor-pointer">Help Center</p>
-            <p className="hover:underline cursor-pointer">Terms of Use</p>
-            <p className="hover:underline cursor-pointer">Privacy Policy</p>
+            <Link href="/about" className="block hover:underline">About Us</Link>
+            <Link href="/contact" className="block hover:underline">Contact Us</Link>
+            <Link href="/terms" className="block hover:underline">Terms of Use</Link>
+            <Link href="/privacy" className="block hover:underline">Privacy Policy</Link>
             <Link href="/admin/login" className="block hover:underline text-gray-700">Admin Login</Link>
           </div>
         </div>

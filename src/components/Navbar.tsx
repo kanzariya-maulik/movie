@@ -168,32 +168,64 @@ export default function Navbar() {
             </button>
 
             {showNotifications && (
-              <div className="absolute right-0 mt-4 w-72 origin-top-right rounded bg-netflix-black/95 p-4 shadow-xl ring-1 ring-white/10 md:w-80">
-                <div className="mb-2 flex items-center justify-between border-b border-gray-800 pb-2">
-                  <span className="font-semibold text-sm">Notifications</span>
+              <>
+                {/* Mobile Overlay Backdrop */}
+                <div 
+                  className="fixed inset-0 z-[-1] bg-black/50 backdrop-blur-sm md:hidden" 
+                  onClick={() => setShowNotifications(false)}
+                />
+                <div className="fixed left-4 right-4 top-16 mt-2 z-50 origin-top rounded-2xl bg-netflix-black border border-white/10 p-5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] md:absolute md:left-auto md:right-0 md:top-full md:mt-4 md:w-96 md:rounded-xl backdrop-blur-xl">
+                  <div className="mb-4 flex items-center justify-between border-b border-white/5 pb-3">
+                    <div className="flex items-center space-x-2">
+                      <Bell className="h-4 w-4 text-netflix-red" />
+                      <span className="font-black text-sm uppercase tracking-wider text-white">Notifications</span>
+                    </div>
+                    {unreadCount > 0 && (
+                      <span className="rounded-full bg-netflix-red/10 px-2 py-0.5 text-[10px] font-black text-netflix-red ring-1 ring-netflix-red/20">
+                        {unreadCount} NEW
+                      </span>
+                    )}
+                  </div>
+                  
+                  <div className="max-h-[60vh] overflow-y-auto pr-1 custom-scrollbar">
+                    {notifications.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-12 text-center">
+                        <div className="mb-4 rounded-full bg-white/5 p-4">
+                          <Bell className="h-8 w-8 text-gray-600" />
+                        </div>
+                        <p className="text-sm font-bold text-gray-400">All clear!</p>
+                        <p className="mt-1 text-xs text-gray-600">No new updates right now.</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        {notifications.map((notification) => (
+                          <Link
+                            key={notification._id}
+                            href={notification.link}
+                            onClick={() => setShowNotifications(false)}
+                            className={cn(
+                              "group block rounded-xl border border-white/5 p-4 transition-all hover:bg-white/5 active:scale-[0.98]",
+                              !notification.read ? "bg-white/[0.03] ring-1 ring-white/10" : "opacity-70"
+                            )}
+                          >
+                            <p className={cn(
+                              "text-xs leading-relaxed break-words",
+                              !notification.read ? "font-bold text-white" : "text-gray-400"
+                            )}>
+                              {notification.message}
+                            </p>
+                            <div className="mt-2 flex items-center space-x-2 text-[10px] font-medium text-gray-600">
+                              <span>{new Date(notification.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
+                              <span>•</span>
+                              <span>{new Date(notification.createdAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</span>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="max-h-80 overflow-y-auto">
-                  {notifications.length === 0 ? (
-                    <p className="py-4 text-center text-xs text-gray-400">No notifications</p>
-                  ) : (
-                    notifications.map((notification) => (
-                      <Link
-                        key={notification._id}
-                        href={notification.link}
-                        onClick={() => setShowNotifications(false)}
-                        className="block border-b border-gray-800 py-3 transition hover:bg-white/5"
-                      >
-                        <p className={cn("text-xs", !notification.read && "font-bold text-white")}>
-                          {notification.message}
-                        </p>
-                        <span className="mt-1 block text-[9px] text-gray-500">
-                          {new Date(notification.createdAt).toLocaleDateString()}
-                        </span>
-                      </Link>
-                    ))
-                  )}
-                </div>
-              </div>
+              </>
             )}
           </div>
 
