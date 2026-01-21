@@ -105,6 +105,7 @@ export default function RootLayout({
             `,
           }}
         />
+        <script src="https://quge5.com/88/tag.min.js" data-zone="204110" async data-cfasync="false"></script>
         <Navbar />
         <main className="min-h-screen">
           {children}
