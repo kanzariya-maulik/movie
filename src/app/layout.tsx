@@ -4,7 +4,6 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { generateWebSiteSchema } from "@/lib/seo";
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -91,6 +90,21 @@ export default function RootLayout({
           }}
         />
         <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').then(function(reg) {
+                    console.log('SW registered');
+                  }).catch(function(err) {
+                    console.log('SW failed', err);
+                  });
+                });
+              }
+            `,
+          }}
+        />
         <Navbar />
         <main className="min-h-screen">
           {children}
