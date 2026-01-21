@@ -1,7 +1,8 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Star, Edit2, Trash2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface MovieCardProps {
   movie: {
@@ -27,9 +28,8 @@ export default function MovieCard({ movie, isAdmin, onDelete }: MovieCardProps) 
   return (
     <div className="group relative">
       <Link href={`/movie/${movie.slug}`} className="block">
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          className="relative h-full cursor-pointer overflow-hidden rounded-md bg-netflix-dark-grey transition duration-200"
+        <div
+          className="relative h-full cursor-pointer overflow-hidden rounded-md bg-netflix-dark-grey transition-transform duration-300 hover:scale-105"
         >
           <div className="relative aspect-[2/3] w-full">
             <Image
@@ -50,10 +50,9 @@ export default function MovieCard({ movie, isAdmin, onDelete }: MovieCardProps) 
               <span className="text-xs text-gray-400">{movie.imdbRating}</span>
             </div>
           </div>
-        </motion.div>
+        </div>
       </Link>
 
-      {/* Inline Admin Actions - Moved outside the Link to prevent nested <a> tags */}
       {isAdmin && (
         <div className="absolute right-2 top-2 z-20 flex flex-col space-y-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           <Link

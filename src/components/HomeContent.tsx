@@ -252,9 +252,9 @@ export default function HomeContent({ initialMovies, initialGenres, pagination }
 
       <section className="px-4 md:px-12 -mt-16 md:mt-[-5rem] relative z-10">
         {/* Filter Bar */}
-        <div className="mb-8 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0 text-white">
+        <div className="mb-8 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-6 md:space-y-0 text-white">
           {/* Genre Selector */}
-          <div className="flex space-x-3 overflow-x-auto pb-4 scrollbar-hide md:pb-0 mask-image-linear-edges">
+          <div className="flex flex-1 min-w-0 space-x-3 overflow-x-auto pb-4 scrollbar-hide md:pb-0 mask-image-linear-edges">
             {initialGenres.map((genre: string) => (
               <Link
                 key={genre}
@@ -272,7 +272,7 @@ export default function HomeContent({ initialMovies, initialGenres, pagination }
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex shrink-0 flex-wrap items-center gap-3">
              <div className="flex items-center space-x-2 shrink-0">
               <Filter className="h-4 w-4 text-gray-400" />
               <select

@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { CheckCircle2, AlertCircle, X } from 'lucide-react';
 
 interface ToastProps {
@@ -11,17 +10,19 @@ interface ToastProps {
 }
 
 export default function Toast({ message, type, onClose }: ToastProps) {
+  const [isVisible, setIsVisible] = useState(false);
+
   useEffect(() => {
+    setIsVisible(true);
     const timer = setTimeout(onClose, 4000);
     return () => clearTimeout(timer);
   }, [onClose]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50, scale: 0.9 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-      className="fixed bottom-8 left-0 right-0 z-[100] mx-auto px-4 sm:left-1/2 sm:right-auto sm:w-auto sm:-translate-x-1/2 sm:px-0"
+    <div
+      className={`fixed bottom-8 left-0 right-0 z-[100] mx-auto px-4 transition-all duration-300 sm:left-1/2 sm:right-auto sm:w-auto sm:-translate-x-1/2 sm:px-0 ${
+        isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+      }`}
     >
       <div className={`flex w-full items-center justify-between space-x-3 rounded-2xl border px-5 py-3.5 shadow-2xl backdrop-blur-md sm:w-auto sm:rounded-full ${
         type === 'success' 
@@ -43,6 +44,6 @@ export default function Toast({ message, type, onClose }: ToastProps) {
           <X className="h-4 w-4" />
         </button>
       </div>
-    </motion.div>
+    </div>
   );
 }

@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Trash2, Edit2, MessageSquare, LogOut, Film, Search, Mail } from 'lucide-react';
 import Link from 'next/link';
-import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/Toast';
 import ConfirmModal from '@/components/ConfirmModal';
 
@@ -536,15 +535,13 @@ export default function AdminDashboard() {
       </div>
 
       {/* Global Modals */}
-      <AnimatePresence>
-        {toast && (
-          <Toast 
-            message={toast.message} 
-            type={toast.type} 
-            onClose={() => setToast(null)} 
-          />
-        )}
-      </AnimatePresence>
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
 
       <ConfirmModal
         isOpen={deleteModal.isOpen}

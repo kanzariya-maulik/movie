@@ -61,7 +61,17 @@ export default function MovieForm({ id }: MovieFormProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: name === 'imdbRating' ? parseFloat(value) : value }));
+    
+    if (name === 'slug') {
+      const slugifiedValue = value
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, '-')
+        .replace(/-+/g, '-');
+      
+      setFormData((prev) => ({ ...prev, [name]: slugifiedValue }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: name === 'imdbRating' ? parseFloat(value) : value }));
+    }
   };
 
   const handleScreenshotChange = (index: number, value: string) => {
@@ -164,6 +174,7 @@ export default function MovieForm({ id }: MovieFormProps) {
                 className="w-full rounded bg-netflix-light-grey px-4 py-3 outline-none ring-1 ring-white/10 focus:ring-netflix-red"
                 placeholder="e.g. inception-2010"
               />
+              <p className="text-[10px] text-gray-500">Only lowercase letters, numbers, and hyphens (-) allowed.</p>
             </div>
           </div>
 
