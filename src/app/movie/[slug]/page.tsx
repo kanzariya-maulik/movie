@@ -359,10 +359,6 @@ export default async function MovieDetails({ params }: MovieDetailsProps) {
                 </div>
               </div>
 
-              {/* Promo / Banner ads */}
-              <div className="aspect-[3/4] rounded-xl bg-white/5 border border-dashed border-gray-700 flex items-center justify-center text-gray-600 text-sm text-center px-4">
-                Advertisement Space
-              </div>
             </div>
           </aside>
         </div>

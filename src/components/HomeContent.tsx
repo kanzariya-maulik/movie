@@ -350,10 +350,6 @@ export default function HomeContent({ initialMovies, initialGenres, pagination }
         )}
       </section>
 
-      {/* Ad Placeholder */}
-      <div className="mx-auto my-12 flex h-24 max-w-7xl items-center justify-center bg-white/5 border border-dashed border-gray-700 text-gray-500 text-sm">
-        Google AdSense Space
-      </div>
 
       {/* Recommendation Section */}
       <section className="mt-20 px-4 md:px-12">
