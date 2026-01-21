@@ -60,7 +60,12 @@ export default function HomeContent({ initialMovies, initialGenres, pagination }
   }, [initialMovies, pagination.currentPage, pagination.hasMore]);
 
   const query = searchParams.get('q');
-  const selectedGenre = searchParams.get('genre') || 'All';
+  
+  // Correctly identify the active genre from either path params or search params
+  const genreFromPath = params.genre ? (params.genre as string).replace(/-/g, ' ') : null;
+  const genreFromSearch = searchParams.get('genre');
+  const activeGenre = (genreFromPath || genreFromSearch || 'All').toLowerCase();
+
   const selectedRating = searchParams.get('rating') || 'All';
   const selectedYear = searchParams.get('year') || 'All';
   const selectedSort = searchParams.get('sort') || 'newest';
@@ -70,8 +75,8 @@ export default function HomeContent({ initialMovies, initialGenres, pagination }
 
   const title = query 
     ? `Search Results for "${query}"` 
-    : selectedGenre !== 'All' 
-      ? `${selectedGenre} Movies` 
+    : activeGenre !== 'all' 
+      ? `${activeGenre.charAt(0).toUpperCase() + activeGenre.slice(1)} Movies` 
       : "Latest Releases";
 
   useEffect(() => {
@@ -172,8 +177,8 @@ export default function HomeContent({ initialMovies, initialGenres, pagination }
       if (query) apiParams.set('q', query);
       
       // Get genre from URL params if on genre page, otherwise from searchParams
-      const genre = params.genre ? (params.genre as string).replace(/-/g, ' ') : selectedGenre;
-      if (genre && genre !== 'All') apiParams.set('genre', genre);
+      const genre = params.genre ? (params.genre as string).replace(/-/g, ' ') : genreFromSearch;
+      if (genre && genre.toLowerCase() !== 'all') apiParams.set('genre', genre);
       
       if (selectedRating !== 'All') apiParams.set('minRating', selectedRating);
       
@@ -200,7 +205,7 @@ export default function HomeContent({ initialMovies, initialGenres, pagination }
     } finally {
       setIsFetching(false);
     }
-  }, [page, hasMore, isFetching, query, selectedGenre, selectedRating, selectedYear, selectedSort, params]);
+  }, [page, hasMore, isFetching, query, activeGenre, selectedRating, selectedYear, selectedSort, params]);
 
   const lastMovieRef = useCallback((node: HTMLDivElement | null) => {
     if (isFetching) return;
@@ -261,7 +266,7 @@ export default function HomeContent({ initialMovies, initialGenres, pagination }
                 href={genre === 'All' ? '/' : `/genre/${genre.toLowerCase().replace(/\s+/g, '-')}`}
                 className={cn(
                   "whitespace-nowrap rounded-full px-5 py-2 text-xs md:text-sm font-medium transition-all duration-300",
-                  selectedGenre.toLowerCase() === genre.toLowerCase()
+                  activeGenre.replace(/\s+/g, '-') === genre.toLowerCase().replace(/\s+/g, '-')
                     ? "bg-netflix-red text-white shadow-lg shadow-netflix-red/20"
                     : "bg-netflix-dark-grey text-gray-400 hover:bg-gray-800 hover:text-white"
                 )}

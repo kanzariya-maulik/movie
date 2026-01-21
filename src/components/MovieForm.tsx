@@ -220,15 +220,68 @@ export default function MovieForm({ id }: MovieFormProps) {
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm text-gray-400">Genres (Comma separated)</label>
-            <input
-              name="genres"
-              value={formData.genres}
-              onChange={handleChange}
-              className="w-full rounded bg-netflix-light-grey px-4 py-3 outline-none ring-1 ring-white/10 focus:ring-netflix-red"
-              placeholder="e.g. Action, Drama, Sci-Fi"
-            />
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm text-gray-400">Genres (Comma separated or select below)</label>
+              <input
+                name="genres"
+                value={formData.genres}
+                onChange={handleChange}
+                className="w-full rounded bg-netflix-light-grey px-4 py-3 outline-none ring-1 ring-white/10 focus:ring-netflix-red"
+                placeholder="e.g. Action, Drama, Sci-Fi"
+              />
+            </div>
+            
+            <div className="flex flex-wrap gap-2">
+              {['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller', 'Animation', 'Adventure', 'Crime', 'Documentary', 'Fantasy', 'Mystery', 'Romance'].map((g) => {
+                const isSelected = formData.genres.split(',').map(s => s.trim().toLowerCase()).includes(g.toLowerCase());
+                return (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => {
+                      const currentGenres = formData.genres.split(',').map(s => s.trim()).filter(Boolean);
+                      if (isSelected) {
+                        setFormData(prev => ({ 
+                          ...prev, 
+                          genres: currentGenres.filter(s => s.toLowerCase() !== g.toLowerCase()).join(', ') 
+                        }));
+                      } else {
+                        setFormData(prev => ({ 
+                          ...prev, 
+                          genres: [...currentGenres, g].join(', ') 
+                        }));
+                      }
+                    }}
+                    className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
+                      isSelected 
+                        ? 'bg-netflix-red text-white shadow-lg shadow-netflix-red/20' 
+                        : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                    }`}
+                  >
+                    {g}
+                  </button>
+                );
+              })}
+            </div>
+
+            {formData.genres && (
+              <div className="flex flex-wrap gap-2 pt-1 border-t border-white/5 mt-2">
+                <span className="text-[10px] text-gray-500 uppercase font-black w-full mb-1">Preview Selected:</span>
+                {formData.genres.split(',').map((g, i) => {
+                  const genre = g.trim();
+                  if (!genre) return null;
+                  return (
+                    <span
+                      key={i}
+                      className="rounded px-2 py-1 text-[10px] font-bold uppercase tracking-wider bg-netflix-red text-white shadow-sm"
+                    >
+                      {genre}
+                    </span>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">

@@ -199,12 +199,12 @@ export default async function MovieDetails({ params }: MovieDetailsProps) {
                   >
                     {movie.releaseYear || new Date(movie.createdAt).getFullYear()}
                   </Link>
-                  <div className="flex gap-2">
-                     {movie.genres?.slice(0, 3).map((g: string) => (
+                  <div className="flex flex-wrap gap-2">
+                     {movie.genres?.slice(0, 5).map((g: string) => (
                        <Link 
                          key={g} 
                          href={`/genre/${g.toLowerCase().replace(/\s+/g, '-')}`}
-                         className="text-sm text-netflix-red hover:underline"
+                         className="bg-netflix-red text-white px-3 py-1 rounded-full text-xs font-bold hover:bg-red-700 transition shadow-lg shadow-netflix-red/20"
                        >
                          {g}
                        </Link>

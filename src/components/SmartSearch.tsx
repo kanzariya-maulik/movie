@@ -145,7 +145,13 @@ export default function SmartSearch() {
                       <div className="flex items-center gap-2 text-xs text-gray-400">
                         <span className="text-yellow-500">★ {movie.imdbRating}</span>
                         <span>•</span>
-                        <span className="truncate">{movie.genres?.slice(0, 2).join(', ')}</span>
+                        <span className="truncate flex items-center gap-1">
+                          {movie.genres?.slice(0, 2).map((g, idx) => (
+                            <span key={idx} className="text-netflix-red font-semibold">
+                              {g}{idx < Math.min(movie.genres.length, 2) - 1 ? ', ' : ''}
+                            </span>
+                          ))}
+                        </span>
                       </div>
                     </div>
                   </Link>
