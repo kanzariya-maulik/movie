@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Search, Bell, User, Menu, X, LogOut, Languages, Check } from 'lucide-react';
+import { Search, Bell, Menu, X, LogOut, Languages, Check, PartyPopper } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -21,6 +21,8 @@ export default function Navbar() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLanguages, setShowLanguages] = useState(false);
   const [currentLang, setCurrentLang] = useState('English');
+  const [addedUpdates, setAddedUpdates] = useState<any[]>([]);
+  const [showPopup, setShowPopup] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -29,6 +31,22 @@ export default function Navbar() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 0);
     };
+
+    const checkUpdates = async () => {
+      try {
+        const userId = localStorage.getItem('cinemax-user-id');
+        const res = await fetch(`/api/recommendations/my-updates?userId=${userId || ''}`);
+        const data = await res.json();
+        if (data && data.length > 0) {
+          setAddedUpdates(data);
+          setShowPopup(true);
+        }
+      } catch (error) {
+        console.error('Error checking updates:', error);
+      }
+    };
+
+    checkUpdates();
 
     const checkAuth = async () => {
       try {
@@ -318,8 +336,69 @@ export default function Navbar() {
           )}
         </div>
       )}
+
+      {/* Added Movie Popup Notifications */}
+      {showPopup && addedUpdates.length > 0 && (
+        <div className="fixed bottom-6 right-6 z-[60] max-w-sm animate-in fade-in slide-in-from-bottom-10 duration-500">
+          <div className="relative overflow-hidden rounded-2xl bg-netflix-black border border-white/10 p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-xl ring-1 ring-white/20">
+            {/* Background Glow */}
+            <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-netflix-red/20 blur-3xl" />
+            
+            <div className="relative flex items-start space-x-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-netflix-red/10 text-netflix-red ring-1 ring-netflix-red/20 shadow-lg shadow-netflix-red/10">
+                <PartyPopper className="h-6 w-6" />
+              </div>
+              
+              <div className="flex-1">
+                <h3 className="text-base font-black uppercase tracking-tight text-white mb-1">
+                  Movie Added!
+                </h3>
+                <div className="space-y-3">
+                  {addedUpdates.map((update) => (
+                    <div key={update._id} className="group">
+                      <p className="text-sm text-gray-400 leading-snug">
+                        Great news! <span className="text-white font-bold">"{update.movieName}"</span> you requested is now available for download.
+                      </p>
+                      <Link 
+                        href={`/movie/${update.movieSlug}`}
+                        onClick={() => handleDismissPopup([update._id])}
+                        className="mt-2 inline-flex items-center text-xs font-black text-netflix-red hover:underline decoration-2 underline-offset-4"
+                      >
+                        DOWNLOAD NOW →
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <button 
+                onClick={() => handleDismissPopup(addedUpdates.map(u => u._id))}
+                className="rounded-full bg-white/5 p-1 text-gray-500 transition hover:bg-white/10 hover:text-white"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
+
+  async function handleDismissPopup(ids: string[]) {
+    try {
+      await fetch('/api/recommendations/my-updates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids }),
+      });
+      setAddedUpdates(prev => prev.filter(u => !ids.includes(u._id)));
+      if (addedUpdates.length <= ids.length) {
+        setShowPopup(false);
+      }
+    } catch (error) {
+      console.error('Error dismissing popup:', error);
+    }
+  }
 
   async function markAsRead() {
     try {
@@ -333,7 +412,6 @@ export default function Navbar() {
 
   function handleLanguageChange(code: string, label: string) {
     if (code === 'en') {
-      // Clear all possible googtrans cookies for a fresh English state
       const domains = [
         window.location.hostname,
         '.' + window.location.hostname,
@@ -346,7 +424,6 @@ export default function Navbar() {
         document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
       });
       
-      // Force reload to completely reset the translation engine
       window.location.reload();
       return;
     }
@@ -357,7 +434,6 @@ export default function Navbar() {
       select.dispatchEvent(new Event('change'));
       setCurrentLang(label);
     } else {
-      // Fallback: set cookie and reload
       document.cookie = `googtrans=/en/${code}; path=/;`;
       window.location.reload();
     }

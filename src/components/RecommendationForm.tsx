@@ -5,7 +5,6 @@ import { Send } from 'lucide-react';
 
 export default function RecommendationForm() {
   const [movieName, setMovieName] = useState('');
-  const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -13,17 +12,24 @@ export default function RecommendationForm() {
     if (!movieName.trim()) return;
 
     setStatus('loading');
+    
+    // Get or create a unique user ID for tracking without login
+    let userId = localStorage.getItem('cinemax-user-id');
+    if (!userId) {
+      userId = Math.random().toString(36).slice(2, 11);
+      localStorage.setItem('cinemax-user-id', userId);
+    }
+
     try {
       const res = await fetch('/api/recommendations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ movieName, email }),
+        body: JSON.stringify({ movieName, userId }),
       });
 
       if (res.ok) {
         setStatus('success');
         setMovieName('');
-        setEmail('');
       } else {
         setStatus('error');
       }
@@ -37,18 +43,11 @@ export default function RecommendationForm() {
       <div className="flex w-full flex-1 flex-col gap-4 sm:flex-row">
         <input
           type="text"
-          placeholder="Movie you want..."
+          placeholder="Enter the movie name you want us to add..."
           value={movieName}
           onChange={(e) => setMovieName(e.target.value)}
-          className="w-full flex-1 rounded bg-netflix-light-grey px-4 py-3 outline-none focus:ring-2 focus:ring-netflix-red"
+          className="w-full flex-1 rounded bg-netflix-light-grey px-4 py-3 outline-none focus:ring-2 focus:ring-netflix-red text-white"
           required
-        />
-        <input
-          type="email"
-          placeholder="Email (optional - to be notified)"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full flex-1 rounded bg-netflix-light-grey px-4 py-3 outline-none focus:ring-2 focus:ring-netflix-red"
         />
       </div>
       <button

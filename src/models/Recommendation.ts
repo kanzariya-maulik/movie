@@ -2,16 +2,20 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IRecommendation extends Document {
   movieName: string;
-  email?: string;
-  status: 'pending' | 'added';
+  ip?: string;
+  userId?: string;
+  movieSlug?: string;
+  status: 'pending' | 'added' | 'notified';
   createdAt: Date;
 }
 
 const RecommendationSchema: Schema = new Schema(
   {
     movieName: { type: String, required: true },
-    email: { type: String },
-    status: { type: String, enum: ['pending', 'added'], default: 'pending' },
+    ip: { type: String },
+    userId: { type: String },
+    movieSlug: { type: String },
+    status: { type: String, enum: ['pending', 'added', 'notified'], default: 'pending' },
   },
   { timestamps: true }
 );

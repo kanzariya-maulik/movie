@@ -6,12 +6,15 @@ import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
   try {
+    const forwarded = request.headers.get('x-forwarded-for');
+    const ip = forwarded ? forwarded.split(',')[0] : '127.0.0.1';
+    
     await dbConnect();
-    const { movieName, email } = await request.json();
+    const { movieName, userId } = await request.json();
     if (!movieName) {
       return NextResponse.json({ message: 'Movie name is required' }, { status: 400 });
     }
-    const rec = await Recommendation.create({ movieName, email });
+    const rec = await Recommendation.create({ movieName, ip, userId });
     return NextResponse.json(rec, { status: 201 });
   } catch (error) {
     return NextResponse.json({ message: 'Error submitting recommendation' }, { status: 500 });

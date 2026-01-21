@@ -23,7 +23,7 @@ export async function DELETE(
       return NextResponse.json({ message: 'Recommendation not found' }, { status: 404 });
     }
 
-    if (recommendation.status !== 'added') {
+    if (recommendation.status !== 'notified') {
       return NextResponse.json({ message: 'Can only delete recommendations that are tagged as added' }, { status: 400 });
     }
 

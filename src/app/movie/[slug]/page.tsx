@@ -10,7 +10,6 @@ import { generateBreadcrumbSchema, generateMovieSchema, generateFAQSchema } from
 import MovieCard from '@/components/MovieCard';
 import FavoritesButton from '@/components/FavoritesButton';
 
-// Revalidate every hour
 export const revalidate = 3600;
 
 interface MovieDetailsProps {

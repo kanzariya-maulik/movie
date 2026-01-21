@@ -3,7 +3,6 @@ import dbConnect from '@/lib/db';
 import Recommendation from '@/models/Recommendation';
 import { verifyToken } from '@/lib/auth';
 import { cookies } from 'next/headers';
-import { sendMovieAddedEmail } from '@/lib/email';
 
 export async function POST(
   request: Request,
@@ -26,17 +25,10 @@ export async function POST(
     }
 
     recommendation.status = 'added';
+    recommendation.movieSlug = movieSlug;
     await recommendation.save();
 
-    if (recommendation.email) {
-      await sendMovieAddedEmail(
-        recommendation.email,
-        recommendation.movieName,
-        `/movie/${movieSlug}`
-      );
-    }
-
-    return NextResponse.json({ message: 'Marked as added and email sent' });
+    return NextResponse.json({ message: 'Marked as added and user will be notified on next visit' });
   } catch (error) {
     console.error('Error in /api/recommendations/admin/[id]/added POST:', error);
     return NextResponse.json({ message: 'Error processing request' }, { status: 500 });
