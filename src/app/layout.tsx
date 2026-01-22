@@ -47,7 +47,11 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'gsvx2awCtISzeyZnX7O1W7qugK9ZC8MWAwakTLW6Rxw',
+    google: [
+      'gsvx2awCtISzeyZnX7O1W7qugK9ZC8MWAwakTLW6Rxw',
+      'google2878be8961be47f5',
+      'fJc5ggR-zerQYCBcs8_FClohRLmWKZ3atdOLrPsjG1E'
+    ],
   },
 };
 
@@ -90,22 +94,8 @@ export default function RootLayout({
           }}
         />
         <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js').then(function(reg) {
-                    console.log('SW registered');
-                  }).catch(function(err) {
-                    console.log('SW failed', err);
-                  });
-                });
-              }
-            `,
-          }}
-        />
-        <script src="https://quge5.com/88/tag.min.js" data-zone="204110" async data-cfasync="false"></script>
+
+
         <Navbar />
         <main className="min-h-screen">
           {children}

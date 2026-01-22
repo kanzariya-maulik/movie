@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, Fragment } from 'react';
 import { useRouter, useSearchParams, useParams } from 'next/navigation';
 import MovieCard from '@/components/MovieCard';
+import EzMobAd from '@/components/EzMobAd';
 import { Play, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import RecommendationForm from '@/components/RecommendationForm';
 import { clsx, type ClassValue } from 'clsx';
@@ -324,15 +325,25 @@ export default function HomeContent({ initialMovies, initialGenres, pagination }
 
         {/* Movie Grid */}
         <div className="grid grid-cols-2 gap-y-8 gap-x-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 mb-12">
-          {movies.map((movie, index) => (
-            <div key={movie._id} ref={index === movies.length - 1 ? lastMovieRef : null}>
-              <MovieCard 
-                movie={movie} 
-                isAdmin={isAdmin}
-                onDelete={handleDeleteMovie}
-              />
-            </div>
-          ))}
+          {movies.map((movie, index) => {
+            const showAd = (index + 1) % 12 === 0;
+            return (
+              <Fragment key={movie._id}>
+                <div ref={index === movies.length - 1 ? lastMovieRef : null}>
+                  <MovieCard 
+                    movie={movie} 
+                    isAdmin={isAdmin}
+                    onDelete={handleDeleteMovie}
+                  />
+                </div>
+                {showAd && (
+                  <div className="col-span-2 sm:col-span-3 md:col-span-4 lg:col-span-5 xl:col-span-6 flex justify-center py-8 my-6 w-full">
+                    <EzMobAd subId={`feed_${Math.floor((index + 1) / 12)}`} />
+                  </div>
+                )}
+              </Fragment>
+            );
+          })}
         </div>
 
         {/* Loading Spinner for Infinite Scroll */}

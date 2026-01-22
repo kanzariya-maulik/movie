@@ -9,6 +9,7 @@ import { Metadata } from 'next';
 import { generateBreadcrumbSchema, generateMovieSchema, generateFAQSchema } from '@/lib/seo';
 import MovieCard from '@/components/MovieCard';
 import FavoritesButton from '@/components/FavoritesButton';
+import EzMobAd from '@/components/EzMobAd';
 
 export const revalidate = 3600;
 
@@ -288,6 +289,13 @@ export default async function MovieDetails({ params }: MovieDetailsProps) {
               </div>
             </div>
 
+
+
+            {/* EZMOB Ad */}
+            <div className="mt-12 flex justify-center w-full">
+              <EzMobAd subId={`${movie.slug}_main`} />
+            </div>
+
             {/* Screenshots Section */}
             {movie.screenshots && movie.screenshots.length > 0 && (
               <div className="mt-16">
@@ -358,6 +366,12 @@ export default async function MovieDetails({ params }: MovieDetailsProps) {
                 </div>
               </div>
 
+
+
+              {/* EZMOB Ad - Sidebar */}
+              <div className="flex justify-center py-4 w-full">
+                <EzMobAd subId={`${movie.slug}_sidebar`} />
+              </div>
             </div>
           </aside>
         </div>
